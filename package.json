@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "login": "npx playwright test /Users/ashleydittmer/Documents/Playwright-e2e-tests/tests/functional/login.spec.ts --headed"
+   
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
