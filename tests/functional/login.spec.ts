@@ -4,7 +4,6 @@ test.describe("Login Functionality", () => {
   test.beforeEach("Go to login page", async ({ page }) => {
     // launch url
     await page.goto("https://katalon-demo-cura.herokuapp.com/");
-    await page.goto("https://katalon-demo-cura.herokuapp.com/");
     await expect(page).toHaveTitle("CURA Healthcare Service");
     await expect(page.locator("//h1")).toHaveText("CURA Healthcare Service");
 
