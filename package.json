@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "login": "npx playwright test /Users/ashleydittmer/Documents/Playwright-e2e-tests/tests/functional/login.spec.ts --headed"
-   
+    "login": "npx playwright test tests/functional/login.spec.ts --headed",
+    "make-appt:all": "npx playwright test tests/functional/tokyo-make-appt.spec.ts tests/functional/hong-kong-make-appt.spec.ts tests/functional/seoul-make-appt.spec.ts --headed"
+
   },
   "keywords": [],
   "author": "",
