@@ -9,7 +9,9 @@ test.describe("Make an Appointment at Tokyo Cura Healthcare center", () => {
     await page.getByLabel("Password").fill("ThisIsNotAPassword");
     await page.getByRole("button", { name: "Login" }).click();
     await expect(page.locator("h2")).toContainText("Make Appointment");
-    await expect(page.getByLabel('Facility')).toContainText('Tokyo CURA Healthcare Center');
+    await expect(page.getByLabel("Facility")).toContainText(
+      "Tokyo CURA Healthcare Center",
+    );
   });
 
   test.afterEach(async ({ page }) => {
@@ -61,7 +63,9 @@ test.describe("Make an Appointment at Tokyo Cura Healthcare center", () => {
     await expect(page.locator("h2")).toContainText("Appointment Confirmation");
   });
 
-  test("Should book an appointment for someone with no health programs", async ({ page }) => {
+  test("Should book an appointment for someone with no health programs", async ({
+    page,
+  }) => {
     await page.getByRole("radio", { name: "None" }).check();
     await page.getByRole("textbox", { name: "Visit Date (Required)" }).click();
 
@@ -78,11 +82,12 @@ test.describe("Make an Appointment at Tokyo Cura Healthcare center", () => {
       .first()
       .click();
 
-      await page.getByRole('textbox', { name: 'Comment' }).click();
-      await page.getByRole('textbox', { name: 'Comment' }).fill('I dont have insurance.');
+    await page.getByRole("textbox", { name: "Comment" }).click();
+    await page
+      .getByRole("textbox", { name: "Comment" })
+      .fill("I dont have insurance.");
 
     await page.getByRole("button", { name: "Book Appointment" }).click();
     await expect(page.locator("h2")).toContainText("Appointment Confirmation");
-
   });
 });
