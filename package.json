@@ -5,6 +5,10 @@
   "main": "index.js",
   "scripts": {
     "login": "npx playwright test tests/functional/login.spec.ts --headed",
+    "make-appt:tokyo": "npx playwright test tests/functional/tokyo-make-appt.spec.ts --headed",
+    "make-appt:hong-kong": "npx playwright test tests/functional/hong-kong-make-appt.spec.ts --headed",
+    "make-appt:seoul": "npx playwright test tests/functional/seoul-make-appt.spec.ts --headed",
+
     "make-appt:all": "npx playwright test tests/functional/tokyo-make-appt.spec.ts tests/functional/hong-kong-make-appt.spec.ts tests/functional/seoul-make-appt.spec.ts --headed"
   },
   "keywords": [],
