@@ -48,3 +48,15 @@ README.md
 - Tests are run against the [Katalon CURA Healthcare Service](https://katalon-demo-cura.herokuapp.com/) demo app
 - The demo app is hosted on Heroku and may take a few seconds to wake up on the first run
 - Appointment dates are dynamically set 7 days ahead to avoid same-day validation errors
+
+## Reporting
+This project uses [Allure](https://allurereport.org/) for test reporting.
+### Prerequisites
+- [Allure CLI](https://allurereport.org/docs/install/) installed
+- Java runtime installed
+### Viewing the Report
+After running any test command, launch the Allure report with:
+
+| Command | Description |
+|---|---|
+| `allure serve allure-results` | Generate and open the report in your browser |
