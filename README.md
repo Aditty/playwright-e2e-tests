@@ -1,6 +1,6 @@
 # Playwright E2E Test Framework
 
-End-to-end test automation framework for the [CURA Healthcare Service](https://katalon-demo-cura.herokuapp.com/) demo application, built with Playwright and TypeScript.
+End-to-end test automation framework for the [CURA Healthcare Service](https://katalon-demo-cura.herokuapp.com/) demo application, built with Playwright and TypeScript. This is a learning project built to uderstand the Playwright Framework from the ground up. it is intentionally small in scope. 
 
 ## Tech Stack
 - Playwright
