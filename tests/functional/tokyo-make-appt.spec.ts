@@ -2,9 +2,12 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Make an Appointment at Tokyo Cura Healthcare center", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("https://katalon-demo-cura.herokuapp.com/");
-    await page.locator("#menu-toggle").click();
-    await page.getByRole("link", { name: "Login" }).click();
+    //await page.goto("https://katalon-demo-cura.herokuapp.com/");
+    //await page.locator("#menu-toggle").click();
+    //await page.getByRole("link", { name: "Login" }).click();
+    await page.goto("https://katalon-demo-cura.herokuapp.com/profile.php#login");
+  await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
+  
     await page.getByLabel("Username").fill("John Doe");
     await page.getByLabel("Password").fill("ThisIsNotAPassword");
     await page.getByRole("button", { name: "Login" }).click();
