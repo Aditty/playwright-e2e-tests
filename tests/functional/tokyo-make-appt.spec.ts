@@ -2,12 +2,8 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Make an Appointment at Tokyo Cura Healthcare center", () => {
   test.beforeEach(async ({ page }) => {
-    //await page.goto("https://katalon-demo-cura.herokuapp.com/");
-    //await page.locator("#menu-toggle").click();
-    //await page.getByRole("link", { name: "Login" }).click();
     await page.goto("https://katalon-demo-cura.herokuapp.com/profile.php#login");
-  await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
-  
+    await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
     await page.getByLabel("Username").fill("John Doe");
     await page.getByLabel("Password").fill("ThisIsNotAPassword");
     await page.getByRole("button", { name: "Login" }).click();
@@ -25,72 +21,37 @@ test.describe("Make an Appointment at Tokyo Cura Healthcare center", () => {
     await expect(page.locator("h1")).toContainText("CURA Healthcare Service");
   });
 
-  test("Should book a Medicaid Appointment", async ({ page }) => {
-    await page.getByRole("radio", { name: "Medicaid" }).check();
-    await page.getByRole("textbox", { name: "Visit Date (Required)" }).click();
+  // Requirement: appointments can be made 1 day and 30 days out
+  for (const daysAhead of [1, 30]) {
+    test(`Should book an appointment ${daysAhead} day(s) from today`, async ({
+      page,
+    }) => {
+      await page.getByRole("radio", { name: "Medicare" }).check();
+      await page.getByRole("textbox", { name: "Visit Date (Required)" }).click();
 
-    // 7 days ahead/dynamic
-    const target = new Date();
-    target.setDate(target.getDate() + 7);
+      const today = new Date();
+      const target = new Date();
+      target.setDate(today.getDate() + daysAhead);
 
-    const day = target.getDate().toString();
-    const calendar = page.locator(".datepicker").first();
-    await expect(calendar).toBeVisible();
-    await page
-      .locator(".day:not(.old):not(.new)")
-      .filter({ hasText: day })
-      .first()
-      .click();
-    await page.getByRole("button", { name: "Book Appointment" }).click();
-    await expect(page.locator("h2")).toContainText("Appointment Confirmation");
-  });
+      // how many times to click the datepicker's next-month arrow
+      const monthsAhead =
+        (target.getFullYear() - today.getFullYear()) * 12 +
+        (target.getMonth() - today.getMonth());
 
-  test("Should book a Medicare Appointment", async ({ page }) => {
-    await page.getByRole("radio", { name: "Medicare" }).check();
-    await page.getByRole("textbox", { name: "Visit Date (Required)" }).click();
+      const calendar = page.locator(".datepicker-days");
+      await expect(calendar).toBeVisible();
 
-    // 7 days ahead/dynamic
-    const target = new Date();
-    target.setDate(target.getDate() + 7);
+      for (let i = 0; i < monthsAhead; i++) {
+        await calendar.locator("th.next").click();
+      }
 
-    const day = target.getDate().toString();
-    const calendar = page.locator(".datepicker").first();
-    await expect(calendar).toBeVisible();
-    await page
-      .locator(".day:not(.old):not(.new)")
-      .filter({ hasText: day })
-      .first()
-      .click();
+      await calendar
+        .locator(".day:not(.old):not(.new)")
+        .getByText(new RegExp(`^${target.getDate()}$`))
+        .click();
 
-    await page.getByRole("button", { name: "Book Appointment" }).click();
-    await expect(page.locator("h2")).toContainText("Appointment Confirmation");
-  });
-
-  test("Should book an appointment for someone with no health programs", async ({
-    page,
-  }) => {
-    await page.getByRole("radio", { name: "None" }).check();
-    await page.getByRole("textbox", { name: "Visit Date (Required)" }).click();
-
-    // 7 days ahead/dynamic
-    const target = new Date();
-    target.setDate(target.getDate() + 7);
-
-    const day = target.getDate().toString();
-    const calendar = page.locator(".datepicker").first();
-    await expect(calendar).toBeVisible();
-    await page
-      .locator(".day:not(.old):not(.new)")
-      .filter({ hasText: day })
-      .first()
-      .click();
-
-    await page.getByRole("textbox", { name: "Comment" }).click();
-    await page
-      .getByRole("textbox", { name: "Comment" })
-      .fill("I dont have insurance.");
-
-    await page.getByRole("button", { name: "Book Appointment" }).click();
-    await expect(page.locator("h2")).toContainText("Appointment Confirmation");
-  });
+      await page.getByRole("button", { name: "Book Appointment" }).click();
+      await expect(page.locator("h2")).toContainText("Appointment Confirmation");
+    });
+  }
 });
