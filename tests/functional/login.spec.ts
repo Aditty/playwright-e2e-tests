@@ -31,6 +31,19 @@ test.describe("Login Functionality", () => {
     await expect(page.getByText("Please login to make")).toBeVisible();
   });
 
+  test("Should log out successfully", async ({ page }) => {
+    await page.getByLabel("Username").fill("John Doe");
+    await page.getByLabel("Password").fill("ThisIsNotAPassword");
+    await page.getByRole("button", { name: "Login" }).click();
+
+    await expect(page.locator("h2")).toContainText("Make Appointment");
+
+    await page.locator("#menu-toggle").click();
+    await page.getByRole("link", { name: "Logout" }).click();
+
+    await expect(page.locator("h1")).toContainText("CURA Healthcare Service");
+  });
+
   test("Should prevent login with incorrect creds", async ({ page }) => {
     // Login
     await page.getByLabel("Username").fill("John Doe");
