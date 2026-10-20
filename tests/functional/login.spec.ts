@@ -1,40 +1,29 @@
 import { test, expect } from "@playwright/test";
+import { LoginPage } from "../pages/login-page";
 
 test.describe("Login Functionality", () => {
   test.beforeEach("Go to login page", async ({ page }) => {
-    // launch url
-    await page.goto("https://katalon-demo-cura.herokuapp.com/");
-    await expect(page).toHaveTitle("CURA Healthcare Service");
-    await expect(page.locator("//h1")).toHaveText("CURA Healthcare Service");
-
-    // click on the make appointment
-    await page.getByRole("link", { name: "Make Appointment" }).click();
-    await expect(page.getByText("Please login to make")).toBeVisible();
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
   });
 
   test("Should login successfully", async ({ page }) => {
-    // Login
-    await page.getByLabel("Username").fill("John Doe");
-    await page.getByLabel("Password").fill("ThisIsNotAPassword");
-    await page.getByRole("button", { name: "Login" }).click();
+    const loginPage = new LoginPage(page);
+    await loginPage.login("John Doe", "ThisIsNotAPassword");
 
-    // Assert a text
     await expect(page.locator("h2")).toContainText("Make Appointment");
   });
 
   test("Should prevent login with empty credentials", async ({ page }) => {
-    // Leave blank: browser should block the submit and keep the user on the login screen
-    await page.getByRole("button", { name: "Login" }).click();
+    const loginPage = new LoginPage(page);
+    await loginPage.submitLogin();
 
-    // Assert user does not advance past the login page
-    await expect(page).toHaveURL(/profile\.php#login$/);
-    await expect(page.getByText("Please login to make")).toBeVisible();
+    await loginPage.expectStillOnLoginPage();
   });
 
   test("Should log out successfully", async ({ page }) => {
-    await page.getByLabel("Username").fill("John Doe");
-    await page.getByLabel("Password").fill("ThisIsNotAPassword");
-    await page.getByRole("button", { name: "Login" }).click();
+    const loginPage = new LoginPage(page);
+    await loginPage.login("John Doe", "ThisIsNotAPassword");
 
     await expect(page.locator("h2")).toContainText("Make Appointment");
 
@@ -45,12 +34,9 @@ test.describe("Login Functionality", () => {
   });
 
   test("Should prevent login with incorrect creds", async ({ page }) => {
-    // Login
-    await page.getByLabel("Username").fill("John Doe");
-    await page.getByLabel("Password").fill("WrongPassword");
-    await page.getByRole("button", { name: "Login" }).click();
+    const loginPage = new LoginPage(page);
+    await loginPage.login("John Doe", "WrongPassword");
 
-    // Assert a text
     await expect(page.locator("#login")).toContainText(
       "Login failed! Please ensure the username and password are valid.",
     );
