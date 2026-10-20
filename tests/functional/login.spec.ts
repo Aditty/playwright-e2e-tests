@@ -22,6 +22,15 @@ test.describe("Login Functionality", () => {
     await expect(page.locator("h2")).toContainText("Make Appointment");
   });
 
+  test("Should prevent login with empty credentials", async ({ page }) => {
+    // Leave blank: browser should block the submit and keep the user on the login screen
+    await page.getByRole("button", { name: "Login" }).click();
+
+    // Assert user does not advance past the login page
+    await expect(page).toHaveURL(/profile\.php#login$/);
+    await expect(page.getByText("Please login to make")).toBeVisible();
+  });
+
   test("Should prevent login with incorrect creds", async ({ page }) => {
     // Login
     await page.getByLabel("Username").fill("John Doe");
